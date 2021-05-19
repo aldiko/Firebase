@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // добавляем для того чтобы реализовать у edittextview аттрибут правильно
+        // добавляем для того чтобы реализовать у edittextview аттрибут правильно (т.е чтобы кнопка была активна только при наличии текста)
         messageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
