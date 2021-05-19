@@ -12,7 +12,8 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/authIcon"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="35dp"/>
 
     <EditText
         android:id="@+id/emailEditText"
