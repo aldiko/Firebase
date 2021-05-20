@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,16 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private Intent i;
 
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null){
-//            currentUser.reload();
-//        }
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         messageEditText = findViewById(R.id.messageEditText);
 
 
-        
+
+        progressBar.setVisibility(View.VISIBLE);
 
         i = getIntent();
         String uid = i.getStringExtra("userId");
@@ -85,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userClass = snapshot.getValue(User.class);
                 username = userClass.fullName;
+
             }
 
             @Override
@@ -92,30 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-//        ArrayList<String> logAndPass = new ArrayList<>();
-//        logAndPass = i.getExtras().getStringArrayList("userId");
-//        String email = logAndPass.get(0);
-//        String password = logAndPass.get(1);
-//        mAuth = FirebaseAuth.getInstance();
-//        mAuth.signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            //updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                        }
-//                    }
-//                });
 
 
 
 
-        //getUserInfo();//метод в котором читаем пользователя и достаем данные
 
         //realtime database
         database = FirebaseDatabase.getInstance();
@@ -132,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         messageListView.setAdapter(adapter);
 
 
-        progressBar.setVisibility(View.INVISIBLE);
+
 
 
 
@@ -194,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 //когда добавляется потомок
                 MessageModel message = snapshot.getValue(MessageModel.class);// в атрибуте узказываем в каком классе можно расспознать
-
                 adapter.add(message);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -224,36 +197,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getUserInfo(){
-        userDatabaseReference=FirebaseDatabase.getInstance().getReference().child("Users");
-
-
-        ArrayList<String> logAndPass = new ArrayList<>();
-        logAndPass = i.getExtras().getStringArrayList("userId");
-
-        if (logAndPass.get(0)!=null && logAndPass.get(1)!=null) {
-            mAuth.signInWithEmailAndPassword(logAndPass.get(0), logAndPass.get(1)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    if (user != null) {
-                        userDatabaseReference.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                //GenericTypeIndicator<List<String>> gt = new GenericTypeIndicator<List<String>>() {};
-                                //userInfo = snapshot.getValue(gt);
-                                User userClass = snapshot.getValue(User.class);
-                                username = userClass.fullName;
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }
 }
